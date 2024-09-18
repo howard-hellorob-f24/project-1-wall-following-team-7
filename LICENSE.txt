@@ -2,7 +2,7 @@ The Michigan Honor License
 This unvetted license below is called the "Michigan Honor License" as the
 3-Clause BSD License plus two clauses for academic integrity.
 
-Copyright 2024 Jamar Bailey III, Kaleb Berry, #Put you guys' names here, inside the <>
+Copyright 2024 Jamar Bailey III, Kaleb Berry, Darnell Love #Put you guys' names here, inside the <>
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
