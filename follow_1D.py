@@ -17,6 +17,7 @@ def find_fwd_dist(ranges, thetas, window=5):
     # Grab the rays near the front of the scan.
     fwd_ranges = np.array(ranges[:window] + ranges[-window:])
     fwd_thetas = np.array(thetas[:window] + thetas[-window:])
+    
     # Grab just the positive values.
     valid_idx = (fwd_ranges > 0).nonzero()
     fwd_ranges = fwd_ranges[valid_idx]
@@ -24,28 +25,57 @@ def find_fwd_dist(ranges, thetas, window=5):
 
     # Compute forward distances.
     fwd_dists = fwd_ranges * np.cos(fwd_thetas)
+    
+    if len(fwd_dists) == 0:
+        return np.nan  # Handle cases where no valid data is available.
+    
     return np.mean(fwd_dists)  # Return the mean.
-
 
 # Initialize a robot object.
 robot = MBot()
-setpoint = 0  # TODO: Pick your setpoint.
+setpoint = 0.5  # Setpoint is the desired distance from the object (in meters).
+forward_speed = 0.2  # Speed to move forward.
+backward_speed = -0.2  # Speed to move backward.
+threshold = 0.05  # Allowable error in distance (tolerance).
+
+# Allow the robot to initialize.
+time.sleep(2)
 
 try:
     # Loop forever.
     while True:
-        # Read the latest Lidar scan.
-        ranges, thetas = robot.read_lidar()
+        # Retry reading the LIDAR with a maximum of 3 attempts.
+        for attempt in range(3):
+            ranges, thetas = robot.read_lidar()
+            if ranges and thetas:
+                break  # Exit loop if data is successfully retrieved.
+            time.sleep(0.1)  # Wait a bit before retrying.
+        else:
+            print("Failed to get LIDAR data after 3 attempts. Stopping robot.")
+            robot.stop()
+            break  # Exit the main loop if data couldn't be retrieved.
 
-        # Get the distance to the wall in front of the robot.
         dist_to_wall = find_fwd_dist(ranges, thetas)
 
-        # TODO: Implement the follow me controller to drive the robot based on
-        # the distance to the wall in front.
+        if np.isnan(dist_to_wall):
+            print("No valid distance data available from LIDAR.")
+            robot.stop()  # Stop the robot if no valid data is available.
+            continue
 
-        # Optionally, sleep for a bit before reading a new scan.
+        # Bang-Bang controller logic
+        if dist_to_wall > setpoint + threshold:
+            robot.drive(forward_speed, 0, 0)  # Move forward.
+        elif dist_to_wall < setpoint - threshold:
+            robot.drive(backward_speed, 0, 0)  # Move backward.
+        else:
+            robot.drive(0, 0, 0)  # Stop the robot.
+
         time.sleep(0.1)
 
-except:
-    # Catch any exception, including the user quitting, and stop the robot.
+except KeyboardInterrupt:
+    print("Control + C detected. Stopping the robot...")
+    robot.stop()
+
+except Exception as e:
+    print(f"An error occurred: {str(e)}")
     robot.stop()
