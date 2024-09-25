@@ -26,10 +26,15 @@ def find_fwd_dist(ranges, thetas, window=5):
     fwd_dists = fwd_ranges * np.cos(fwd_thetas)
     return np.mean(fwd_dists)  # Return the mean.
 
-
+#Lines 30 - 37: CHANGE
 # Initialize a robot object.
 robot = MBot()
-setpoint = 0  # TODO: Pick your setpoint.
+setpoint = 0.5  # Setpoint is the desired distance from the object (in meters).
+
+# Define the control speeds
+forward_speed = 0.2  # Speed to move forward.
+backward_speed = -0.2  # Speed to move backward.
+threshold = 0.05  # Allowable error in distance (tolerance).
 
 try:
     # Loop forever.
@@ -40,12 +45,22 @@ try:
         # Get the distance to the wall in front of the robot.
         dist_to_wall = find_fwd_dist(ranges, thetas)
 
-        # TODO: Implement the follow me controller to drive the robot based on
-        # the distance to the wall in front.
+        # TODO: Implement the follow me controller to drive the robot based on. CHANGE
+        # Implement Bang-Bang controller.
+        if dist_to_wall > setpoint + threshold:
+            # Too far from the wall, move forward.
+            robot.set_velocity(forward_speed, 0)  # Move forward with a fixed speed.
+        elif dist_to_wall < setpoint - threshold:
+            # Too close to the wall, move backward.
+            robot.set_velocity(backward_speed, 0)  # Move backward with a fixed speed.
+        else:
+            # Within acceptable range, stop.
+            robot.set_velocity(0, 0)  # Stop the robot.
 
         # Optionally, sleep for a bit before reading a new scan.
         time.sleep(0.1)
 
 except:
     # Catch any exception, including the user quitting, and stop the robot.
+    print(f"Error: {e}") #CHANGE
     robot.stop()
