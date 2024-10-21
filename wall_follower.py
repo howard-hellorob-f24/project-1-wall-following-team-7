@@ -49,11 +49,11 @@ def compute_velocity_vector(angle_to_wall, drive_velocity):
 # Initialize the robot object
 robot = MBot()
 setpoint = 0.5  # Desired distance from the wall (in meters).
-forward_speed = 0.2  # Speed to move forward.
+forward_speed = 0.3  # Speed to move forward.
 threshold = 0.05  # Allowable error in distance (tolerance).
 
 # Allow the robot to initialize
-time.sleep(2)
+time.sleep(3)
 
 try:
     while True:
