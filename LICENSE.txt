@@ -2,7 +2,7 @@ The Michigan Honor License
 This unvetted license below is called the "Michigan Honor License" as the
 3-Clause BSD License plus two clauses for academic integrity.
 
-Copyright 2024 Jamar Bailey III, Kaleb Berry, Darnell Love, Kamryn Brown, Courtney Mahugu, Myles Block, Michael J Johnson Jr., Foster Ware IV, Liliann Ulysse, Camryn Dion Turner-Markes...
+Copyright 2024 Jamar Bailey III, Kaleb Berry, Darnell Love, Kamryn Brown, Courtney Mahugu, Myles Block, Michael J Johnson Jr., Liliann Ulysse, Camryn Dion Turner-Markes, Foster Ware IV,
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
